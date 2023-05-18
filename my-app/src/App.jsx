@@ -1,11 +1,12 @@
-import Continents from "./components/Continents";
-import Countries from "./components/Countries";
-import Cities from "./components/Cities";
+// import Continents from "./components/Continents";
+// import Countries from "./components/Countries";
+// import Cities from "./components/Cities";
+import Query from "./components/Query";
 
 const App = () => {
   return (
     <>
-      <div>
+      {/* <div>
         <Continents />
       </div>
       <div>
@@ -13,7 +14,8 @@ const App = () => {
       </div>
       <div>
         <Cities />
-      </div>
+      </div> */}
+      <Query />
     </>
   );
 };
