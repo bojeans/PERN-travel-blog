@@ -10,25 +10,56 @@ const Query = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const { data: cities, error: citiesError } = await supabase
+          .from("cities")
+          .select("name, country_id");
+
+        const { data: countries, error: countriesError } = await supabase
+          .from("countries")
+          .select("id, name, continent_id");
+
+        const { data: continents, error: continentsError } = await supabase
+          .from("continents")
+          .select("id, name");
+
+        if (citiesError || countriesError || continentsError) {
+          console.error(
+            "Error executing queries:",
+            citiesError,
+            countriesError,
+            continentsError
+          );
+        } else {
+          const joinedData = joinData(cities, countries, continents);
+          setData(joinedData);
+        }
+      } catch (error) {
+        console.error("Error retrieving data:", error);
+      }
+    };
     getData();
   }, []);
 
-  const getData = async () => {
-    const query = `SELECT cities.name AS city, countries.name AS country, continents.name AS continent
-    //     FROM cities
-    //     JOIN countries ON cities.country_id = countries.id
-    //     JOIN continents ON countries.continent_id = continents.id;`;
-    const data = await supabase.from("continents").select("*");
-
-    const result = await data.query(query);
-    setData(data);
-    return result.rows;
+  const joinData = (cities, countries, continents) => {
+    return cities.map((city) => {
+      const country = countries.find((c) => c.id === city.country_id);
+      const continent = continents.find((ct) => ct.id === country.continent_id);
+      return {
+        continent: continent.name,
+        country: country.name,
+        city: city.name,
+      };
+    });
   };
 
   return (
     <ul>
-      {data.map((data) => (
-        <li key={data.id}>{data.name}</li>
+      {data.map((item, index) => (
+        <li key={index}>
+          {item.continent}, {item.country}, {item.city}
+        </li>
       ))}
     </ul>
   );
