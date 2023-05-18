@@ -1,30 +1,21 @@
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const url = import.meta.env.VITE_API_URL;
-const key = import.meta.env.VITE_API_KEY;
-
-const supabase = createClient(url, key);
+import Continents from "./components/Continents";
+import Countries from "./components/Countries";
+import Cities from "./components/Cities";
 
 const App = () => {
-  const [continents, setContinents] = useState([]);
-
-  useEffect(() => {
-    getContinents();
-  }, []);
-
-  const getContinents = async () => {
-    const { data } = await supabase.from("continents").select();
-    setContinents(data);
-  }
-
   return (
-    <ul>
-      {continents.map((continent) => (
-        <li key={continent.id}>{continent.name}</li>
-      ))}
-    </ul>
+    <>
+      <div>
+        <Continents />
+      </div>
+      <div>
+        <Countries />
+      </div>
+      <div>
+        <Cities />
+      </div>
+    </>
   );
-}
+};
 
 export default App;
